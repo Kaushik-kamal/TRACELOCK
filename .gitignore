@@ -1,0 +1,88 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ---------------------------------------------------------------------------
+# Tooling caches
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# ---------------------------------------------------------------------------
+# Secrets
+#
+# .env holds a real SerpAPI key. .env.example documents every variable with
+# placeholder values and IS committed, so a fresh clone knows what to set.
+# ---------------------------------------------------------------------------
+.env
+.env.local
+*.pem
+*.key
+
+# ---------------------------------------------------------------------------
+# Runtime evidence and personal data
+#
+# Everything below is produced by running the tool. Most of it is other
+# people's faces: candidate images pulled from the public web, the operator's
+# own uploads, and evidence bundles naming real accounts. None of it belongs
+# in a public repository, and none of it is needed to run the project -- the
+# pipeline recreates whatever it needs on the next run.
+# ---------------------------------------------------------------------------
+
+# Content-addressed store: downloaded candidate media.
+data/cas/
+
+# Evidence artifacts and anchor receipts from real investigations.
+data/runs/*
+!data/runs/.gitkeep
+
+# Probe and input images supplied to the tool.
+data/probes/*
+!data/probes/.gitkeep
+data/inputs/
+
+# Deployment records; may sit beside private keys.
+data/chain/
+
+# Diagnostic output: contact sheets and per-candidate dumps written while
+# investigating a failing run. Regenerable, large, and full of faces.
+data/diagnostics/
+data/diagnostics_control/
+
+# Calibration label manifest is reviewer-specific working state. The fitted
+# model (data/calibration/model.json) IS committed -- the verification
+# thresholds are a core engineering artifact and the app will not run without
+# them.
+data/calibration/manifest.json
+
+evidence_store/
+
+# ---------------------------------------------------------------------------
+# Editors and operating systems
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------------------
+# Scratch
+# ---------------------------------------------------------------------------
+*.log
+scratch/
+tmp/

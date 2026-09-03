@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TRACELOCK — Digital Identity Evidence &amp; Provenance Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">
+      <span class="mark">TRACELOCK</span>
+      <span class="tagline">Digital Identity Evidence &amp; Provenance Engine</span>
+    </div>
+    <div class="sysbar" id="sysbar"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ SCREEN 1: SOURCE ============ -->
+  <section id="screen-source" class="screen active">
+    <h1 class="ask">Where is your image from?</h1>
+    <p class="sub">
+      Every source runs the same pipeline &mdash; nothing here is simulated.
+    </p>
+
+    <!-- Five named entry points. They do not create five pipelines: each one
+         focuses the SAME universal input below, so a judge who knows what they
+         have can say so, and a judge who does not can just drop or paste. -->
+    <div class="sources">
+      <button class="source" data-source="upload">
+        <span class="ico">&#128193;</span>
+        <span class="st">Upload Image</span>
+        <span class="sd">From your computer</span>
+      </button>
+      <button class="source" data-source="webcam">
+        <span class="ico">&#128247;</span>
+        <span class="st">Use Webcam</span>
+        <span class="sd">Capture a frame</span>
+      </button>
+      <button class="source" data-source="url">
+        <span class="ico">&#128279;</span>
+        <span class="st">Paste Public Link</span>
+        <span class="sd">Image, article or social post</span>
+      </button>
+      <button class="source" data-source="drive">
+        <span class="ico">&#9729;</span>
+        <span class="st">Google Drive</span>
+        <span class="sd">Public share link</span>
+      </button>
+      <button class="source" data-source="demo">
+        <span class="ico">&#9654;</span>
+        <span class="st">Try Demo Example</span>
+        <span class="sd">Pre-selected image</span>
+      </button>
+    </div>
+
+    <div class="universal" id="universal">
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept="image/jpeg,image/png,image/webp" hidden>
+        <span class="drop-ico">&#8862;</span>
+        <span class="drop-main">Drop an image here</span>
+        <span class="drop-sub">or click to choose a file</span>
+      </label>
+
+      <div class="or"><span>or paste a link</span></div>
+
+      <div class="row">
+        <input type="url" id="url-input" autocomplete="off" spellcheck="false"
+               placeholder="Image URL, article, social post, or Drive share link">
+        <button class="btn primary" id="url-go">Go</button>
+      </div>
+
+      <!-- Filled live, offline, as the operator types. -->
+      <div class="detect" id="detect" hidden></div>
+
+      <div class="universal-actions">
+        <button class="btn ghost" id="use-webcam">&#128247; Use webcam</button>
+        <button class="btn ghost" id="show-support">What links work?</button>
+      </div>
+    </div>
+
+    <!-- Webcam stays a panel: it needs a live video element. -->
+    <div class="panel" id="panel-webcam" hidden>
+      <div class="panel-head">Webcam capture</div>
+      <video id="cam" autoplay playsinline muted></video>
+      <canvas id="shot" hidden></canvas>
+      <div class="panel-actions">
+        <button class="btn" id="cam-start">Start camera</button>
+        <button class="btn primary" id="cam-capture" disabled>Capture</button>
+        <button class="btn" id="cam-retake" hidden>Retake</button>
+        <button class="btn ghost" id="cam-close">Close</button>
+      </div>
+      <p class="note" id="cam-note">The camera stream stays in your browser until you capture.</p>
+    </div>
+
+    <!-- Honest capability matrix, served from the same adapters the resolver uses. -->
+    <div class="panel support" id="panel-support" hidden>
+      <div class="panel-head">What TRACELOCK can resolve</div>
+      <p class="note">
+        Only metadata a site publishes to anonymous visitors is read. TRACELOCK
+        sends no credentials, solves no CAPTCHA, and reports a refusal as a
+        refusal.
+      </p>
+      <div class="matrix" id="support-matrix"></div>
+    </div>
+
+    <div class="demo-block">
+      <div class="demo-head">
+        <h2>Try a demo</h2>
+        <span class="demo-flag">DEMO INPUT</span>
+      </div>
+      <p class="demo-note" id="demo-notice"></p>
+      <div class="examples" id="examples"></div>
+    </div>
+
+    <div class="demo-block">
+      <div class="demo-head"><h2>Blockchain readiness</h2></div>
+      <div id="chain-readiness"></div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2: SELECTED ============ -->
+  <section id="screen-selected" class="screen">
+    <button class="back" data-goto="screen-source">← Choose a different image</button>
+    <h1 class="ask">Selected image</h1>
+
+    <div class="selected">
+      <div class="preview-box">
+        <img id="preview" alt="Selected image preview">
+      </div>
+      <div class="meta">
+        <div class="metarow"><span>Source</span><b id="m-source">—</b></div>
+        <div class="metarow"><span>File</span><b id="m-file">—</b></div>
+        <div class="metarow"><span>SHA-256</span><b class="mono" id="m-hash">—</b></div>
+        <div class="metarow"><span>Public URL</span><b class="mono" id="m-url">—</b></div>
+
+        <div class="kind-notice" id="kind-notice" hidden></div>
+        <div id="picked-from" hidden></div>
+
+        <div class="checks" id="checks">
+          <div class="checking">Validating…</div>
+        </div>
+
+        <!-- MODE A: a public URL exists -> full discovery -->
+        <div id="mode-public" hidden>
+          <label class="anchor-opt">
+            <input type="checkbox" id="want-anchor" checked>
+            <span>Anchor the result on the blockchain when finished</span>
+          </label>
+          <div class="modes" id="modes">
+            <button class="mode-opt active" data-mode="fast">
+              <b>Fast</b>
+              <span>Stops once 3 independent publishers confirm a match.</span>
+            </button>
+            <button class="mode-opt" data-mode="thorough">
+              <b>Thorough</b>
+              <span>Examines every candidate. Slower, finds more corroboration.</span>
+            </button>
+          </div>
+          <button class="btn start" id="start" disabled>START PUBLIC INVESTIGATION</button>
+          <p class="note" id="start-note"></p>
+        </div>
+
+        <!-- MODE B: local image only -> choose -->
+        <div id="mode-choose" hidden>
+          <div class="privacy-card">
+            <div class="pc-head">Public discovery needs a publicly reachable image</div>
+            <p>
+              Reverse-image search engines fetch a URL — they cannot receive a
+              file. This image only exists on your machine.
+            </p>
+            <p class="pc-strong">
+              TRACELOCK does not silently upload biometric images to
+              third-party services. Your face will never leave this machine
+              unless you explicitly publish it yourself.
+            </p>
+          </div>
+          <div class="mode-actions">
+            <button class="btn primary" id="go-local">LOCAL ANALYSIS</button>
+            <button class="btn start" id="go-publish">START PUBLIC DISCOVERY</button>
+            <button class="btn" id="go-addurl">I HAVE A PUBLIC URL</button>
+          </div>
+          <p class="note">
+            <strong>Local analysis</strong> measures everything possible offline:
+            face detection, quality, and a cryptographic fingerprint. No network
+            request is made and no trust score is produced — scoring requires
+            discovered evidence.
+          </p>
+        </div>
+
+
+        <!-- Consent gate. Nothing is uploaded until this is accepted. -->
+        <div id="mode-consent" hidden>
+          <div class="consent-card">
+            <div class="consent-head">Public discovery consent</div>
+            <p class="consent-what" id="consent-what"></p>
+
+            <ul class="consent-guarantees" id="consent-guarantees"></ul>
+
+            <div class="consent-host" id="consent-host"></div>
+
+            <div class="mode-actions">
+              <button class="btn" id="consent-cancel">Cancel</button>
+              <button class="btn start" id="consent-accept">CONSENT &amp; SEARCH</button>
+            </div>
+            <p class="note" id="consent-status"></p>
+          </div>
+        </div>
+
+        <!-- MODE B -> A: operator supplies a URL -->
+        <div id="mode-addurl" hidden>
+          <div class="panel-head">Add the public link to this image</div>
+          <p class="note" style="margin-top:0">
+            Paste a direct image link, social-media post, or public webpage.
+            TRACELOCK will try to resolve the publicly available image and then
+            verify whether it matches the image you selected.
+          </p>
+          <div class="row">
+            <input type="url" id="link-input"
+                   placeholder="https://instagram.com/p/... or https://site.com/photo.jpg"
+                   autocomplete="off">
+            <button class="btn primary" id="link-go">Check link</button>
+          </div>
+          <div id="link-detect"></div>
+          <div id="link-candidates" hidden></div>
+          <div id="link-steps"></div>
+          <div id="link-result"></div>
+          <p class="note" id="link-support"></p>
+          <button class="back" id="link-back" style="padding-top:14px">← back</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: PROGRESS ============ -->
+  <section id="screen-progress" class="screen">
+    <h1 class="ask">Investigating</h1>
+    <p class="sub">Live pipeline stages. Each updates when the work actually completes.</p>
+    <ol class="stages" id="stages"></ol>
+    <div class="run-actions">
+      <button class="btn ghost" id="cancel-run">Cancel investigation</button>
+      <span class="note" id="run-mode"></span>
+    </div>
+    <div class="failbox" id="failbox" hidden></div>
+  </section>
+
+  <!-- ============ SCREEN 4: RESULTS ============ -->
+  <section id="screen-results" class="screen">
+    <button class="back" data-goto="screen-source">← New investigation</button>
+    <div id="results"></div>
+  </section>
+
+</main>
+
+<footer class="foot wrap">
+  <span>TRACELOCK</span> · discovery makes claims, TRACELOCK re-measures evidence ·
+  <span id="foot-cal"></span>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

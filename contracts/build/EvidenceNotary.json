@@ -1,0 +1,280 @@
+{
+  "name": "EvidenceNotary",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "merkleRoot",
+          "type": "bytes32"
+        }
+      ],
+      "name": "AlreadyAnchored",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "EmptyRoot",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint16",
+          "name": "trustScoreBp",
+          "type": "uint16"
+        }
+      ],
+      "name": "TrustScoreOutOfRange",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "merkleRoot",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "caseId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "submitter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "probeCommitment",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "pipelineHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint16",
+          "name": "trustScoreBp",
+          "type": "uint16"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint32",
+          "name": "evidenceCount",
+          "type": "uint32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint32",
+          "name": "independentPublishers",
+          "type": "uint32"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint40",
+          "name": "timestamp",
+          "type": "uint40"
+        }
+      ],
+      "name": "EvidenceAnchored",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "merkleRoot",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "caseId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "probeCommitment",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "pipelineHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint16",
+          "name": "trustScoreBp",
+          "type": "uint16"
+        },
+        {
+          "internalType": "uint32",
+          "name": "evidenceCount",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "independentPublishers",
+          "type": "uint32"
+        }
+      ],
+      "name": "anchor",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "anchorCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "anchors",
+      "outputs": [
+        {
+          "internalType": "uint40",
+          "name": "timestamp",
+          "type": "uint40"
+        },
+        {
+          "internalType": "address",
+          "name": "submitter",
+          "type": "address"
+        },
+        {
+          "internalType": "uint16",
+          "name": "trustScoreBp",
+          "type": "uint16"
+        },
+        {
+          "internalType": "uint32",
+          "name": "evidenceCount",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "merkleRoot",
+          "type": "bytes32"
+        }
+      ],
+      "name": "isAnchored",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "merkleRoot",
+          "type": "bytes32"
+        }
+      ],
+      "name": "verify",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "exists",
+          "type": "bool"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint40",
+              "name": "timestamp",
+              "type": "uint40"
+            },
+            {
+              "internalType": "address",
+              "name": "submitter",
+              "type": "address"
+            },
+            {
+              "internalType": "uint16",
+              "name": "trustScoreBp",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint32",
+              "name": "evidenceCount",
+              "type": "uint32"
+            }
+          ],
+          "internalType": "struct EvidenceNotary.Anchor",
+          "name": "record",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "merkleRoot",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "leaf",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32[]",
+          "name": "proof",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "verifyLeaf",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561000f575f80fd5b506107098061001d5f395ff3fe608060405234801561000f575f80fd5b5060043610610060575f3560e01c806334f96c8c146100645780634f0b58011461008057806375e36616146100b8578063b01b6d53146101a1578063d8e4a88a14610234578063dd566d8214610247575b5f80fd5b61006d60015481565b6040519081526020015b60405180910390f35b6100a861008e366004610564565b5f9081526020819052604090205464ffffffffff16151590565b6040519015158152602001610077565b6101516100c6366004610564565b604080516080810182525f808252602082018190529181018290526060810182905250505f90815260208181526040918290208251608081018452905464ffffffffff81168083526501000000000082046001600160a01b031693830193909352600160c81b810461ffff1693820193909352600160d81b90920463ffffffff166060830152151591565b604080519215158352815164ffffffffff166020808501919091528201516001600160a01b03168382015281015161ffff16606080840191909152015163ffffffff16608082015260a001610077565b6101f56101af366004610564565b5f6020819052908152604090205464ffffffffff8116906501000000000081046001600160a01b031690600160c81b810461ffff1690600160d81b900463ffffffff1684565b6040805164ffffffffff90951685526001600160a01b03909316602085015261ffff9091169183019190915263ffffffff166060820152608001610077565b6100a861024236600461057b565b61025c565b61025a61025536600461060f565b610355565b005b5f8481526020819052604081205464ffffffffff16810361027e57505f61034d565b835f5b83811015610347575f85858381811061029c5761029c61067c565b9050602002013590505f80828511156102b65782856102b9565b84835b604051600160f81b60208201526021810183905260418101829052919350915060029060610160408051601f19818403018152908290526102f991610690565b602060405180830381855afa158015610314573d5f803e3d5ffd5b5050506040513d601f19601f8201168201806040525081019061033791906106bc565b9450505050806001019050610281565b50851490505b949350505050565b86610373576040516329e7276760e11b815260040160405180910390fd5b5f8781526020819052604090205464ffffffffff16156103ae576040516330d2381360e01b8152600481018890526024015b60405180910390fd5b6127108361ffff1611156103db57604051636fa0b48d60e11b815261ffff841660048201526024016103a5565b5f42905060405180608001604052808264ffffffffff168152602001336001600160a01b031681526020018561ffff1681526020018463ffffffff168152505f808a81526020019081526020015f205f820151815f015f6101000a81548164ffffffffff021916908364ffffffffff1602179055506020820151815f0160056101000a8154816001600160a01b0302191690836001600160a01b031602179055506040820151815f0160196101000a81548161ffff021916908361ffff1602179055506060820151815f01601b6101000a81548163ffffffff021916908363ffffffff16021790555090505060015f815460010191905081905550336001600160a01b031687897f852e069248a282f5f9ef5b4939e1f59eb13afeb8937f93a5fc1baee536af53c289898989898960405161055296959493929190958652602086019490945261ffff92909216604085015263ffffffff908116606085015216608083015264ffffffffff1660a082015260c00190565b60405180910390a45050505050505050565b5f60208284031215610574575f80fd5b5035919050565b5f805f806060858703121561058e575f80fd5b8435935060208501359250604085013567ffffffffffffffff808211156105b3575f80fd5b818701915087601f8301126105c6575f80fd5b8135818111156105d4575f80fd5b8860208260051b85010111156105e8575f80fd5b95989497505060200194505050565b803563ffffffff8116811461060a575f80fd5b919050565b5f805f805f805f60e0888a031215610625575f80fd5b87359650602088013595506040880135945060608801359350608088013561ffff81168114610652575f80fd5b925061066060a089016105f7565b915061066e60c089016105f7565b905092959891949750929550565b634e487b7160e01b5f52603260045260245ffd5b5f82515f5b818110156106af5760208186018101518583015201610695565b505f920191825250919050565b5f602082840312156106cc575f80fd5b505191905056fea264697066735822122008f7a8baa4a59b8efc12e7d7315ae0394ef0675cb4321ce98be07632960ccd7264736f6c63430008180033",
+  "solc_version": "0.8.24",
+  "source_sha256": "6c72637125efd99eb8bc1ef065998b05987a8ab63dd6770d935ceddf635a2ec0"
+}

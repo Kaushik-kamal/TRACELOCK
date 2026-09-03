@@ -1,0 +1,22 @@
+{
+  "schema_version": "calibration-rules/1",
+  "notice": "Operator-declared labelling. Identity is NEVER inferred from similarity -- that would calibrate the measurement against itself. Every rule rests on evidence independent of the score being fitted.",
+  "rules": [
+    {
+      "probe_sha256_prefix": "914d8124",
+      "label": "GENUINE",
+      "confidence": "attribution",
+      "subject_ref": "public-figure-01",
+      "domains": ["narendramodi.in", "aajtak.in", "jagran.com", "10tv.in", "manoramayearbook.in"],
+      "basis": "Probe is a photograph of a serving head of government. Candidates restricted to the subject's OWN official domain (narendramodi.in) and established national news outlets that published the image captioned as depicting him. Labelled by source attribution -- the method used to build LFW -- and carrying the same weakness: a mis-captioned photograph becomes a mislabel. Domains with weak or unverifiable attribution (image aggregators, unknown hosts) are deliberately EXCLUDED rather than assumed."
+    },
+    {
+      "probe_sha256_prefix": "0ceeeb0a",
+      "label": "IMPOSTOR",
+      "confidence": "distinct-party",
+      "subject_ref": "operator-self",
+      "domains": [],
+      "basis": "Probe is the operator's own face. Candidates are profile photographs published under DIFFERENT named third parties -- other individuals' social profiles, other account IDs' avatars, and stock photography. Different named party implies different identity. This label does not depend on any similarity measurement."
+    }
+  ]
+}

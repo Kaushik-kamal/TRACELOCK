@@ -1,0 +1,48 @@
+{
+  "schema_version": "calibration-model/1",
+  "model_id": "buffalo_l:w600k_r50.onnx",
+  "fitted_at": "2026-09-01T06:27:10.214329+00:00",
+  "platt_a": 16.57785936,
+  "platt_b": -5.90372471,
+  "n_genuine": 5,
+  "n_impostor": 35,
+  "eer": 0.0,
+  "eer_threshold": 0.293756,
+  "auc": 0.988571,
+  "operating_points": {
+    "far_0.01": {
+      "threshold": 0.293756,
+      "far": 0.0,
+      "frr": 0.0
+    },
+    "far_0.001": {
+      "threshold": 0.293756,
+      "far": 0.0,
+      "frr": 0.0
+    },
+    "eer": {
+      "threshold": 0.293756,
+      "far": 0.0,
+      "frr": 0.0
+    }
+  },
+  "distribution": {
+    "genuine_mean": 0.426134,
+    "genuine_min": 0.41226,
+    "impostor_mean": 0.110071,
+    "impostor_max": 0.293405,
+    "separation": 0.118855,
+    "is_separable": true
+  },
+  "labeling_basis": "Probe is a photograph of a serving head of government. Candidates restricted to the subject's OWN official domain (narendramodi.in) and established national news outlets that published the image captioned as depicting him. Labelled by source attribution -- the method used to build LFW -- and carrying the same weakness: a mis-captioned photograph becomes a mislabel. Domains with weak or unverifiable attribution (image aggregators, unknown hosts) are deliberately EXCLUDED rather than assumed. | Probe is the operator's own face. Candidates are profile photographs published under DIFFERENT named third parties -- other individuals' social profiles, other account IDs' avatars, and stock photography. Different named party implies different identity. This label does not depend on any similarity measurement.",
+  "provenance": {
+    "kind": "REAL",
+    "name": "tracelock-runs-v1",
+    "description": "Similarity measurements harvested from completed TRACELOCK verification runs. Labels proposed by declared rules and reviewed by the operator.",
+    "created_at": "2026-09-01T06:27:10.196296+00:00",
+    "is_fixture": false,
+    "citable": false,
+    "consent": []
+  },
+  "confidence_note": "EER 0.0000, 95% CI [0.0000, 0.4345] on n=5 (the smaller class). With a sample this size the interval is wide; treat the operating points as indicative, not definitive."
+}

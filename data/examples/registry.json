@@ -1,0 +1,45 @@
+{
+  "schema_version": "examples/1",
+  "notice": "DEMO INPUT images. The investigations they trigger are fully live -- only the starting image is pre-selected. Add your own entries here; each needs a public_url for discovery to be possible.",
+  "examples": [
+    {
+      "example_id": "public-figure",
+      "title": "Public figure",
+      "description": "A head of government. Widely published, so reverse image search finds genuine matches across many independent news domains -- the case where corroboration is meaningful.",
+      "local_path": "data/probes/modi.jpg",
+      "public_url": "https://raw.githubusercontent.com/Kaushik-kamal/jpg/main/modi.jpg.jpeg",
+      "attribution": "Official / press photograph of a public figure.",
+      "recommended": true,
+      "preflight": {
+        "passed": true,
+        "checked_at": "2026-09-01T13:56:37.271580+00:00",
+        "issue": null,
+        "face_quality": 0.80869316424669,
+        "image": {
+          "format": "JPEG",
+          "width": 797,
+          "height": 998,
+          "byte_size": 86435,
+          "sha256": "c0d5dc6de1a57d3289cf9fe70a2bfb191ff3797b6678fc0018727e7da88c0469"
+        },
+        "note": "Input verified: URL reachable, image decodable, face usable. Discovery RESULTS are not guaranteed -- they depend on a third-party index."
+      }
+    },
+    {
+      "example_id": "operator-self",
+      "title": "Low web presence",
+      "description": "A private individual with almost no indexed presence. Discovery returns visually similar strangers and verification rejects all of them -- the case that proves the firewall works.",
+      "local_path": "data/probes/me.jpg",
+      "public_url": "",
+      "attribution": "Operator's own photograph, used with consent.",
+      "preflight": {
+        "passed": false,
+        "checked_at": "2026-09-01T13:56:37.271580+00:00",
+        "issue": "NO_PUBLIC_URL",
+        "face_quality": null,
+        "image": null,
+        "note": "No public URL. This example can be previewed and analysed locally but cannot be used for public discovery."
+      }
+    }
+  ]
+}
