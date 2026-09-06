@@ -1002,6 +1002,15 @@ class InvestigationRunner:
             # question directly, keeping "discovered" and "face verified"
             # separate so neither can be mistaken for the other.
             "social": _social_summary(results),
+            # Tier-1 public profile evidence (see tracelock.social_profile).
+            # Deliberately a sibling of "social", not a replacement for it:
+            # "social" answers "was a real post found and face-verified";
+            # "discovered_profiles" answers the narrower, riskier question
+            # of whether that post's OWN metadata points at a linkable
+            # account, tiered so a reader can see exactly how much weight
+            # each answer can bear. Never anchored -- see chain/fingerprint.py
+            # LEAF_TAGS, which this key is deliberately absent from.
+            "discovered_profiles": _profile_summary(results),
             "results": results,
         }
 
@@ -1092,6 +1101,19 @@ def _social_summary(results: list[dict]) -> dict:
     from tracelock.ingest.social import summarise
 
     return summarise(results)
+
+
+def _profile_summary(results: list[dict]) -> dict:
+    """Tier-1 public profile evidence. Additive, unanchored -- see
+    `tracelock.social_profile` for the tier semantics. Runs over the SAME
+    finished `results` list as `_social_summary`, from the same place, for
+    the same reason: a candidate's profile relationship must never be built
+    before verification has decided whether that candidate is real evidence
+    at all.
+    """
+    from tracelock.social_profile import relate
+
+    return relate(results).to_dict()
 
 
 def _load_calibration():

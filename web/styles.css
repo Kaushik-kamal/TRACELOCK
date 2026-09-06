@@ -1464,7 +1464,143 @@ details.rejected[open] summary::before { content: "▾ "; }
 .cc-link:hover { text-decoration: underline; }
 .cc-link.muted { color: var(--ink-faint); }
 
+/* ==========================================================================
+   PUBLIC PROFILE EVIDENCE (Tier 1)
+   Deliberately its own visual language, not a reskin of .cand-card -- a
+   profile relationship is a different KIND of claim than a face match, and
+   the two must never be visually interchangeable.
+   ========================================================================== */
+
+.pe-sub {
+  margin: 0 0 18px;
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--ink-mid);
+  max-width: 74ch;
+}
+.pe-empty {
+  font-family: var(--f-display);
+  font-size: 13px;
+  color: var(--ink-faint);
+  padding: 14px 0;
+}
+
+.pe-group { margin-top: 20px; }
+.pe-group-head {
+  font-family: var(--f-display);
+  font-size: 13px;
+  letter-spacing: .06em;
+  margin-bottom: 10px;
+}
+.pe-group-head.verified     { color: var(--pass); }
+.pe-group-head.unverified   { color: var(--warn); }
+.pe-group-head.discovered   { color: var(--ink-mid); }
+
+.pe-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px;
+}
+
+.pe-card {
+  border-radius: 9px;
+  background: var(--sunken);
+  border: 1px solid var(--rule);
+  border-left-width: 3px;
+  padding: 12px 14px;
+}
+.pe-card.verified     { border-left-color: var(--pass); }
+.pe-card.unverified   { border-left-color: var(--warn); }
+.pe-card.discovered   { border-left-color: var(--ink-faint); }
+
+.pe-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 8px;
+}
+.pe-tier {
+  font-family: var(--f-display);
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+.pe-tier.verified   { color: var(--pass); }
+.pe-tier.unverified { color: var(--warn); }
+.pe-tier.discovered { color: var(--ink-mid); }
+.pe-platform {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+}
+
+.pe-link {
+  display: block;
+  font-size: 12.5px;
+  color: var(--info);
+  text-decoration: none;
+  word-break: break-all;
+  margin-bottom: 6px;
+}
+.pe-link:hover { text-decoration: underline; }
+.pe-link.muted { color: var(--ink-faint); }
+
+.pe-claim-text {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-mid);
+}
+
+.pe-meta-row {
+  display: flex; flex-wrap: wrap; gap: 4px 12px;
+  font-size: 10.5px; color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+.pe-meta-row code {
+  font-family: var(--f-mono);
+  color: var(--ink-mid);
+}
+
+.pe-source-link {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--ink-mid);
+  text-decoration: none;
+  margin-bottom: 4px;
+}
+.pe-source-link:hover { text-decoration: underline; }
+
+.pe-why { margin-top: 6px; }
+.pe-why summary {
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--info);
+  user-select: none;
+}
+.pe-chain {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--ink-mid);
+}
+.pe-chain li { margin-bottom: 8px; }
+.pe-claim { color: var(--ink); }
+.pe-source { color: var(--ink-faint); font-size: 10.5px; }
+.pe-quote {
+  font-family: var(--f-mono);
+  font-size: 10.5px;
+  color: var(--ink-faint);
+  margin-top: 2px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 @media (max-width: 620px) {
   .cand-cards { grid-template-columns: 1fr; }
   .cvs-summary { grid-template-columns: repeat(3, 1fr); }
+  .pe-cards { grid-template-columns: 1fr; }
 }

@@ -25,7 +25,7 @@ from __future__ import annotations
 import hashlib
 import time
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
 import httpx
 
@@ -426,6 +426,7 @@ class CandidateVerifier:
             warnings=tuple(dict.fromkeys(warnings)),
             verified_at=utc_now(),
             elapsed_seconds=time.perf_counter() - started,
+            discovery_metadata=_discovery_metadata(candidate),
         )
 
     # ------------------------------------------------------------------
@@ -481,6 +482,7 @@ class CandidateVerifier:
             warnings=tuple(dict.fromkeys(warnings)),
             verified_at=utc_now(),
             elapsed_seconds=time.perf_counter() - started,
+            discovery_metadata=_discovery_metadata(candidate),
         )
 
     def _safe_phash(self, path: Path) -> PerceptualHash | None:
@@ -520,6 +522,29 @@ def _candidate_id(candidate: Candidate, index: int) -> str:
     """Stable id derived from the candidate's own content, not its position."""
     basis = (candidate.image_url or candidate.post_url or str(index)).encode("utf-8")
     return "cand-{0:03d}-{1}".format(index, hashlib.sha256(basis).hexdigest()[:8])
+
+
+def _discovery_metadata(candidate: Candidate) -> dict[str, Any] | None:
+    """Carry forward the discovery provider's own text fields, untouched.
+
+    `Candidate` already holds title/author/text/timestamp -- SerpAPI sends
+    them with every result, whether or not anything downstream reads them.
+    This function makes no HTTP call and adds no new field to `candidate`; it
+    only decides whether there is anything worth attaching to the result. A
+    candidate with none of these fields populated gets `None`, matching
+    `build_provenance_dict`'s existing convention of omitting empty structure
+    rather than shipping four null keys on every one of hundreds of results.
+    """
+    fields = {
+        "title": candidate.title,
+        "author": candidate.author,
+        "text": candidate.text,
+        "source": candidate.source,
+        "timestamp": candidate.timestamp,
+    }
+    if not any(fields.values()):
+        return None
+    return fields
 
 
 def _build_face_evidence(analysis: FaceAnalysisResult) -> FaceEvidence:

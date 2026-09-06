@@ -1102,6 +1102,126 @@ function candidateGroup(rows, kind, title, note, runId, ceiling, total) {
     </div>`;
 }
 
+// ==========================================================================
+// Public profile evidence (Tier 1)
+//
+// Built entirely from metadata the live search already returned for
+// candidates that ALREADY cleared face verification -- no new lookups. The
+// backend (tracelock.social_profile) is the only place a tier is decided;
+// this file only ever reads `rel.tier` and renders whichever label/icon that
+// exact tier owns. There is no "verified" styling anywhere in this section
+// that is not gated on tier === "VERIFIED_HIGH_CONFIDENCE".
+// ==========================================================================
+
+const PROFILE_TIER_META = {
+  VERIFIED_HIGH_CONFIDENCE: { icon: "✓", cls: "verified", label: "Verified high-confidence" },
+  UNVERIFIED_POSSIBLE_MATCH: { icon: "?", cls: "unverified", label: "Unverified possible match" },
+  DISCOVERED_LINK: { icon: "○", cls: "discovered", label: "Discovered link only" },
+};
+
+function profileTierMeta(tier) {
+  return PROFILE_TIER_META[tier] || { icon: "○", cls: "discovered", label: tier };
+}
+
+function profileEvidenceChain(chain) {
+  if (!chain || !chain.length) return "";
+  return `
+    <details class="pe-why">
+      <summary>Why this was linked</summary>
+      <ol class="pe-chain">
+        ${chain.map((step) => `
+          <li>
+            <div class="pe-claim">${esc(step.claim)}</div>
+            <div class="pe-source">source: ${esc(step.source)}</div>
+            ${step.quoted_text ? `<div class="pe-quote">&ldquo;${esc(step.quoted_text)}&rdquo;</div>` : ""}
+          </li>`).join("")}
+      </ol>
+    </details>`;
+}
+
+function profileCard(rel) {
+  const meta = profileTierMeta(rel.tier);
+  const link = rel.profile_url
+    ? `<a class="pe-link" href="${esc(rel.profile_url)}" target="_blank"
+          rel="noopener noreferrer">${esc(rel.profile_url)}</a>`
+    : `<span class="pe-link muted">${rel.handle
+        ? "Name/handle found in metadata: " + esc(rel.handle) + " (no link constructed from free text)"
+        : "no resolvable link"}</span>`;
+
+  return `
+    <article class="pe-card ${esc(meta.cls)}">
+      <div class="pe-head">
+        <span class="pe-tier ${esc(meta.cls)}">${meta.icon} ${esc(meta.label)}</span>
+        <span class="pe-platform">${esc(rel.platform || "")}</span>
+      </div>
+      <div class="pe-body">
+        ${link}
+        <p class="pe-claim-text">${esc(rel.tier_claim || "")}</p>
+        <div class="pe-meta-row">
+          <span>source candidate <code>${esc(rel.source_candidate_id || "")}</code></span>
+          ${rel.face_similarity != null
+            ? `<span>similarity ${rel.face_similarity.toFixed(4)}</span>` : ""}
+        </div>
+        ${rel.source_url ? `
+          <a class="pe-source-link" href="${esc(rel.source_url)}" target="_blank"
+             rel="noopener noreferrer">View the verified source page &#8599;</a>` : ""}
+        ${profileEvidenceChain(rel.evidence_chain)}
+      </div>
+    </article>`;
+}
+
+function publicProfileEvidenceSection(result) {
+  const verification = result.verification || {};
+  const dp = verification.discovered_profiles;
+  // No verification block at all (e.g. an old artifact) -- render nothing
+  // rather than a fabricated empty state for a feature that never ran.
+  if (!dp) return "";
+
+  const rels = dp.relationships || [];
+  const verified = rels.filter((r) => r.tier === "VERIFIED_HIGH_CONFIDENCE");
+  const unverified = rels.filter((r) => r.tier === "UNVERIFIED_POSSIBLE_MATCH");
+  const discovered = rels.filter((r) => r.tier === "DISCOVERED_LINK");
+
+  return `
+    <section class="story pe-section">
+      <div class="story-q">Public profile evidence</div>
+      <p class="pe-sub">
+        Built only from title/author/source metadata the live search already
+        returned for candidates that independently cleared face verification
+        &mdash; no additional lookups were made. This never claims a profile
+        belongs to a real person; it reports what the discovery provider's
+        own metadata says about pages already proven to contain the
+        subject's face.
+      </p>
+
+      ${rels.length === 0
+        ? `<p class="pe-empty">${esc(dp.statement || "No verified public profile relationship found.")}</p>`
+        : `
+          ${verified.length ? `
+            <div class="pe-group">
+              <div class="pe-group-head verified">
+                &#10003; Verified high-confidence (${verified.length})
+              </div>
+              <div class="pe-cards">${verified.map(profileCard).join("")}</div>
+            </div>` : ""}
+          ${unverified.length ? `
+            <div class="pe-group">
+              <div class="pe-group-head unverified">
+                ? Unverified possible match (${unverified.length})
+              </div>
+              <div class="pe-cards">${unverified.map(profileCard).join("")}</div>
+            </div>` : ""}
+          ${discovered.length ? `
+            <div class="pe-group">
+              <div class="pe-group-head discovered">
+                &#9675; Discovered link only (${discovered.length})
+              </div>
+              <div class="pe-cards">${discovered.map(profileCard).join("")}</div>
+            </div>` : ""}
+        `}
+    </section>`;
+}
+
 function candidateVerificationSection(result, opts) {
   const all = (result.verification || {}).results || [];
   const analysed = analysedCandidates(result);
@@ -1403,6 +1523,8 @@ function renderResults(result) {
     </section>
 
     ${candidateVerificationSection(result, {})}
+
+    ${publicProfileEvidenceSection(result)}
 
     <!-- 4. CAN THE RESULT BE TAMPERED WITH? -->
     <section class="story">

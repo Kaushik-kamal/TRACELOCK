@@ -193,6 +193,14 @@ class VerificationResult:
     verified_at: datetime
     elapsed_seconds: float
 
+    # The title/author/snippet/publish-date text the DISCOVERY provider
+    # (SerpAPI) returned alongside this candidate's URL. Fetched at discovery
+    # time regardless of whether anything downstream reads it; carried here
+    # unmodified so `social_profile` can mine it without a second network
+    # call. Never influences status, similarity, or any threshold -- it is a
+    # passenger, not an input to verification.
+    discovery_metadata: dict[str, Any] | None = None
+
     @property
     def is_verified(self) -> bool:
         return self.status is VerificationStatus.VERIFIED_CANDIDATE
@@ -269,6 +277,7 @@ class VerificationResult:
             "warnings": list(self.warnings),
             "verified_at": self.verified_at.isoformat(),
             "elapsed_seconds": round(self.elapsed_seconds, 3),
+            "discovery_metadata": self.discovery_metadata,
         }
 
 
